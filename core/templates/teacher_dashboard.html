@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teacher Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            margin: 0;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            margin: auto;
+            margin-top: 30px;
+        }
+
+        h2 {
+            color: white;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ff4d4d;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        input {
+            padding: 8px;
+            margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .message {
+            background: #d4edda;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            padding: 0;
+        }
+
+        li {
+            list-style: none;
+            background: #f1f1f1;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+
+        .logout {
+            background: black;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>👨‍🏫 Welcome {{ teacher.name }}</h2>
+
+    {% for message in messages %}
+        <div class="message">{{ message }}</div>
+    {% endfor %}
+
+    <!-- CLASS CONTROL -->
+    <div class="card">
+        <h3>📢 Class Control</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <button name="class_today" class="btn-primary">Class Today</button>
+            <button name="no_class" class="btn-danger">No Class</button>
+        </form>
+    </div>
+
+    <!-- ASSIGNMENT -->
+    <div class="card">
+        <h3>📤 Upload Assignment</h3>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Assignment Title" required>
+            <input type="file" name="file" required>
+            <button name="upload_assignment" class="btn-success">Upload</button>
+        </form>
+    </div>
+
+    <!-- QUIZ -->
+    <div class="card">
+        <h3>➕ Add Quiz</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="quiz_title" placeholder="Quiz Title" required>
+            <button name="add_quiz" class="btn-primary">Add Quiz</button>
+        </form>
+    </div>
+
+    <!-- SCORES -->
+    <div class="card">
+        <h3>📊 Student Scores</h3>
+        <ul>
+        {% for r in results %}
+            <li>{{ r.student.name }} — {{ r.quiz.title }} — <strong>{{ r.score }}</strong></li>
+        {% empty %}
+            <li>No results yet</li>
+        {% endfor %}
+        </ul>
+    </div>
+
+    <a href="{% url 'logout' %}" class="logout">Logout</a>
+
+</div>
+
+</body>
+</html>

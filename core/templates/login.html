@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+
+    <style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.container {
+    width: 90%;
+    max-width: 900px;
+    margin: 40px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+h2, h3 {
+    color: #4a47a3;
+}
+
+button {
+    background: #4a47a3;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #372f8a;
+}
+
+a {
+    text-decoration: none;
+    color: #4a47a3;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.card {
+    background: #f5f7ff;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+}
+</style>
+
+</head>
+
+<body>
+<div class="container" style="text-align:center">
+
+<h2>Login</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <input type="text" name="username" placeholder="Username" required><br><br>
+    <input type="password" name="password" placeholder="Password" required><br><br>
+
+    <button type="submit">Login</button>
+</form>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Take Quiz</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f9;
+        }
+
+        .container {
+            width: 70%;
+            margin: auto;
+            margin-top: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .score {
+            margin-top: 20px;
+            font-size: 18px;
+            color: green;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>{{ quiz.title }}</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {% for q in questions %}
+            <div class="question">
+                <p><strong>{{ q.question_text }}</strong></p>
+
+                <input type="radio" name="{{ q.id }}" value="{{ q.option1 }}"> {{ q.option1 }}<br>
+                <input type="radio" name="{{ q.id }}" value="{{ q.option2 }}"> {{ q.option2 }}<br>
+                <input type="radio" name="{{ q.id }}" value="{{ q.option3 }}"> {{ q.option3 }}<br>
+                <input type="radio" name="{{ q.id }}" value="{{ q.option4 }}"> {{ q.option4 }}<br>
+            </div>
+        {% endfor %}
+
+        <button type="submit">Submit Quiz</button>
+    </form>
+
+    {% if score is not None %}
+        <div class="score">
+            🎉 Your Score: {{ score }}
+        </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz List</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            margin: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+
+        a {
+            text-decoration: none;
+            background: #ff7e5f;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>🧠 Available Quizzes</h2>
+
+    {% for quiz in quizzes %}
+        <div class="card">
+            <h3>{{ quiz.title }}</h3>
+            <a href="/quiz/{{ quiz.id }}/">Start Quiz</a>
+        </div>
+    {% empty %}
+        <p>No quizzes available</p>
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

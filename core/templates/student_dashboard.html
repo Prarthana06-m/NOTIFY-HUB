@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+
+    <style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.container {
+    width: 90%;
+    max-width: 900px;
+    margin: 40px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+h2, h3 {
+    color: #4a47a3;
+}
+
+button {
+    background: #4a47a3;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #372f8a;
+}
+
+a {
+    text-decoration: none;
+    color: #4a47a3;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.card {
+    background: #f5f7ff;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+}
+</style>
+
+
+</head>
+<body>
+<div class="container">
+
+<h2>Welcome {{ student.name }}</h2>
+
+<hr>
+
+<h3>Notifications</h3>
+
+{% for n in notifications %}
+<div class="card">
+    {{ n.message }}
+
+    {% if not n.is_read %}
+        <a href="{% url 'mark_read' n.id %}">Mark as read</a>
+    {% else %}
+        ✔ Read
+    {% endif %}
+</div>
+{% empty %}
+<p>No notifications</p>
+{% endfor %}
+
+<hr>
+
+<h3>📚 Assignments</h3>
+
+{% for assignment in assignments %}
+<div class="card">
+    {{ assignment.title }} -
+    <a href="{{ assignment.file.url }}">Download</a>
+</div>
+{% empty %}
+<p>No assignments</p>
+{% endfor %}
+
+<hr>
+
+<h3>📝 Take Quiz</h3>
+<a href="{% url 'quiz_list' %}"><button>Go to Quiz</button></a>
+
+<hr>
+
+<h2>📊 Quiz Results</h2>
+
+{% for r in results %}
+<div class="card">
+    <h4>{{ r.quiz.title }}</h4>
+    Score: <strong>{{ r.score }}</strong>
+</div>
+{% empty %}
+<p>No quiz attempts</p>
+{% endfor %}
+
+<br>
+
+<a href="{% url 'logout' %}"><button>Logout</button></a>
+
+</div>
+</body>
+</html>
