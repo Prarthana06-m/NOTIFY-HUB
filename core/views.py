@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from .models import *
 
@@ -11,18 +11,6 @@ from .models import *
 # =========================
 def role_select(request):
     return render(request, 'role_select.html')
-
-
-# =========================
-# 🔁 REDIRECT AFTER LOGIN
-# =========================
-@login_required
-def redirect_user(request):
-    if Student.objects.filter(user=request.user).exists():
-        return redirect('student_dashboard')
-    elif Teacher.objects.filter(user=request.user).exists():
-        return redirect('teacher_dashboard')
-    return redirect('role_select')
 
 
 # =========================
@@ -67,26 +55,17 @@ def teacher_dashboard(request):
 
     if request.method == "POST":
 
-        # 📢 CLASS TODAY
+        # ✅ OBSERVER TRIGGER (NO LOOP HERE)
         if "class_today" in request.POST:
-            for student in Student.objects.all():
-                Notification.objects.create(
-                    student=student,
-                    message="📢 Class is scheduled for today"
-                )
-            messages.success(request, "Class Today notification sent!")
+            ClassStatus.objects.create(status="today")
+            messages.success(request, "Notification sent!")
 
-        # ❌ NO CLASS
         elif "no_class" in request.POST:
-            for student in Student.objects.all():
-                Notification.objects.create(
-                    student=student,
-                    message="❌ No class today"
-                )
-            messages.success(request, "No Class notification sent!")
+            ClassStatus.objects.create(status="no_class")
+            messages.success(request, "Notification sent!")
 
-        # 📤 UPLOAD ASSIGNMENT
-        else:
+        # ✅ UPLOAD ASSIGNMENT
+        elif "upload_assignment" in request.POST:
             title = request.POST.get("title")
             file = request.FILES.get("file")
 
@@ -96,7 +75,18 @@ def teacher_dashboard(request):
                     file=file,
                     teacher=teacher
                 )
-                messages.success(request, "Assignment Uploaded!")
+                messages.success(request, "Assignment uploaded!")
+
+        # ✅ ADD QUIZ (RESTORED)
+        elif "add_quiz" in request.POST:
+            title = request.POST.get("quiz_title")
+
+            if title:
+                Quiz.objects.create(
+                    title=title,
+                    teacher=teacher
+                )
+                messages.success(request, "Quiz added!")
 
     return render(request, 'teacher_dashboard.html', {
         'teacher': teacher,
@@ -161,7 +151,7 @@ def student_login(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-        user, created = User.objects.get_or_create(username=username)
+        user, _ = User.objects.get_or_create(username=username)
         user.set_password(password)
         user.save()
 
@@ -190,7 +180,7 @@ def teacher_login(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-        user, created = User.objects.get_or_create(username=username)
+        user, _ = User.objects.get_or_create(username=username)
         user.set_password(password)
         user.save()
 
@@ -209,8 +199,11 @@ def teacher_login(request):
             return redirect('teacher_dashboard')
 
     return render(request, 'login.html')
-from django.contrib.auth import logout
 
+
+# =========================
+# 🚪 LOGOUT
+# =========================
 def custom_logout(request):
     logout(request)
-    return redirect('role_select')  
+    return redirect('role_select')
