@@ -11,8 +11,11 @@ def class_status_notification(sender, instance, created, **kwargs):
     if created:
         if instance.status == "class_today":
             message = "📢 Class is scheduled for today"
-        else:
+        elif instance.status == "no_class":
             message = "❌ No class today"
+
+        else:
+            return  # ❗ safety: ignore unknown values
 
         for student in Student.objects.all():
             Notification.objects.create(

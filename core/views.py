@@ -57,7 +57,7 @@ def teacher_dashboard(request):
 
         # ✅ OBSERVER TRIGGER (NO LOOP HERE)
         if "class_today" in request.POST:
-            ClassStatus.objects.create(status="today")
+            ClassStatus.objects.create(status="class_today")
             messages.success(request, "Notification sent!")
 
         elif "no_class" in request.POST:
